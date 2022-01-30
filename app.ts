@@ -11,6 +11,13 @@ app.get("/", (req: express.Request, res: express.Response, next: express.NextFun
     }
 );
 
+import getCoronaDataService from "./services/getCoronaDataService"
+
+(async () => {
+  const coronaResult = await getCoronaDataService()
+  console.log(coronaResult)
+})()
+
 app.post("/message", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     const accessToken = await getTokenService()

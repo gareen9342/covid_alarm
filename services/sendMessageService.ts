@@ -2,7 +2,7 @@ import axios from "axios";
 
 const qs = require("qs")
 
-const sendMessageService = async (token) => {
+const sendMessageService = async (token: string) => {
   try {
 
     const requestObj: any = JSON.stringify({

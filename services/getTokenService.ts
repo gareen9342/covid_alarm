@@ -3,7 +3,11 @@ import axios from "axios";
 const qs = require("qs")
 
 /**
- * access Token은 갱신한다. refreshToken이 있을 경우에 환경변수 재세팅
+ *
+ * accessToken 값 리턴
+ * refreshToken값이 있을 경우, 임시적으로 환경변수를 변경한다.
+ * TODO : 현재는 환경변수를 이용하지만 데이터베이스에 저장을 해야할 듯
+ * @returns {Promise<string : token>}
  */
 const getTokenService = async () => {
   let token = ""
