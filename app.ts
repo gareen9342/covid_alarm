@@ -1,7 +1,9 @@
 import * as express from "express";
 import 'dotenv/config'
-import dateUtils from "./util/dateUtils";
 
+const cron = require("node-cron")
+
+import dateUtils from "./util/dateUtils";
 import getTokenService from "./services/getTokenService"
 import sendMessageService from "./services/sendMessageService"
 import getCoronaDataService from "./services/getCoronaDataService"
@@ -13,8 +15,8 @@ app.get("/", (req: express.Request, res: express.Response, next: express.NextFun
     }
 );
 
-
-app.post("/message", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+// 매일 아침 8시 실행
+cron.schedule("0 8 * * *", async () => {
   try {
     const accessToken = await getTokenService()
     const coronaData = await getCoronaDataService()
@@ -31,12 +33,10 @@ app.post("/message", async (req: express.Request, res: express.Response, next: e
     }
   } catch (err) {
     throw err
-  } finally {
-    res.send("message service")
   }
 })
 
-
+// TODO : 과연 이 에러 핸들러는 쓰일 것인가
 app.use((err: express.Errback, req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(500).send({error: 'Something failed!'});
 })
