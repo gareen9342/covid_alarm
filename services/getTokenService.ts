@@ -38,5 +38,5 @@ const getTokenService = async () => {
     return token
   }
 }
-module.exports = getTokenService
+export default getTokenService
 

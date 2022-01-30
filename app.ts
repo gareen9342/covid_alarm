@@ -1,8 +1,10 @@
 import * as express from "express";
 import 'dotenv/config'
+import dateUtils from "./util/dateUtils";
 
-const getTokenService = require("./services/getTokenService")
-const sendMessageService = require("./services/sendMessageService")
+import getTokenService from "./services/getTokenService"
+import sendMessageService from "./services/sendMessageService"
+import getCoronaDataService from "./services/getCoronaDataService"
 
 const app: express.Application = express();
 
@@ -11,23 +13,27 @@ app.get("/", (req: express.Request, res: express.Response, next: express.NextFun
     }
 );
 
-import getCoronaDataService from "./services/getCoronaDataService"
-
-(async () => {
-  const coronaResult = await getCoronaDataService()
-  console.log(coronaResult)
-})()
 
 app.post("/message", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     const accessToken = await getTokenService()
-    await sendMessageService(accessToken)
+    const coronaData = await getCoronaDataService()
+    if (coronaData) {
+      await sendMessageService(accessToken, `
+        ${dateUtils.getTodayDate()}의 코로나 확진자 수
+        
+        * * * * * * * * * * 
+        - 어제의 확진자수: ${coronaData.totalCase}
+        - 전체 확진자수: ${coronaData.totalCaseBefore}
+        - 현재 확진자수: ${coronaData.nowCase}
+        (기준 업데이트 시간: ${coronaData.updateTime})
+      `)
+    }
   } catch (err) {
     throw err
   } finally {
     res.send("message service")
   }
-  // axios.post()
 })
 
 

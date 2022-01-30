@@ -13,7 +13,7 @@ export class CoronaData {
   constructor(totalCase: string, totalCaseBefore: string, nowCase: string, updateTime: string) {
     this.totalCase = totalCase
     this.totalCaseBefore = totalCaseBefore
-    this.nowCase = nowCase;
+    this.nowCase = nowCase
     this.updateTime = updateTime
   }
 

@@ -2,12 +2,12 @@ import axios from "axios";
 
 const qs = require("qs")
 
-const sendMessageService = async (token: string) => {
+const sendMessageService = async (token: string, message: string) => {
   try {
 
     const requestObj: any = JSON.stringify({
       object_type: "text",
-      text: "텍스트 영역입니다. 최대 200자 표시 가능합니다.",
+      text: message,
       link: {
         "web_url": "https://developers.kakao.com",
         "mobile_web_url": "https://developers.kakao.com"
@@ -32,4 +32,4 @@ const sendMessageService = async (token: string) => {
   }
 }
 
-module.exports = sendMessageService
+export default sendMessageService
