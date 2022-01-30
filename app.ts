@@ -3,7 +3,7 @@ import 'dotenv/config'
 import {json} from 'body-parser'
 
 const cron = require("node-cron")
-import {sequelize} from "./initUtils/sequelize"
+import {sequelize} from "./config/sequelize"
 
 import dateUtils from "./util/dateUtils"
 import getTokenService from "./services/getTokenService"
