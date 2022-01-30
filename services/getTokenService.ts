@@ -12,6 +12,7 @@ const qs = require("qs")
 const getTokenService = async () => {
   let token = ""
   try {
+    console.log(`access token refresh requset `)
     const apiRes = await axios.post(`https://kauth.kakao.com/oauth/token`, qs.stringify({
           grant_type: "refresh_token",
           client_id: process.env.KAKAO_CLIENT_ID,
@@ -22,10 +23,9 @@ const getTokenService = async () => {
             'Content-Type': 'application/x-www-form-urlencoded',
           }
         });
+    console.log(`token refreshed : api response = ${JSON.stringify(apiRes.data)}`)
 
-    console.log(`token refreshed : api response = ${JSON.stringify(apiRes)}`)
-
-    token = apiRes?.data?.accessToken || ""
+    token = apiRes?.data?.access_token || ""
 
     // refresh token 값이 있을 경우 갱신한다.
     if (apiRes?.data?.refresh_token) {
