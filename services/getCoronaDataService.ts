@@ -11,7 +11,7 @@ const getCoronaDataService: () => Promise<CoronaData | null> = async () => {
     const {data: apiData} = await axios.get(`https://api.corona-19.kr/korea/?serviceKey=${process.env.CORONA_API_KEY}`)
     if (apiData) {
       console.log(`## corona data received ${JSON.stringify(apiData)}`)
-      coronaData = new CoronaData(apiData.TotalCase, apiData.TotalCaseBefore, apiData.NowCase, apiData.UpdateTime);
+      coronaData = new CoronaData(apiData.TotalCase, apiData.TotalCaseBefore, apiData.NowCase, apiData.updateTime);
     }
   } catch (err) {
     throw err

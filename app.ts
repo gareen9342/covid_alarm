@@ -16,29 +16,29 @@ app.get("/", (req: express.Request, res: express.Response, next: express.NextFun
 );
 
 // 매일 아침 8시 실행
-// cron.schedule("* 13 * * *", async () => {
-//   try {
-//     console.log(`do cron job`)
-//     const accessToken = await getTokenService()
-//     if (!accessToken?.length) {
-//       throw new Error("token is not refreshed")
-//     }
-//     const coronaData = await getCoronaDataService()
-//     if (coronaData) {
-//       await sendMessageService(accessToken, `
-//         ${dateUtils.getTodayDate()}의 코로나 확진자 수
-//
-//         * * * * * * * * * *
-//         - 어제의 확진자수: ${coronaData.totalCase}
-//         - 전체 확진자수: ${coronaData.totalCaseBefore}
-//         - 현재 확진자수: ${coronaData.nowCase}
-//         (기준 업데이트 시간: ${coronaData.updateTime})
-//       `)
-//     }
-//   } catch (err) {
-//     throw err
-//   }
-// })
+cron.schedule("0 8 * * *", async () => {
+  try {
+    console.log(`do cron job`)
+    const accessToken = await getTokenService()
+    if (!accessToken?.length) {
+      throw new Error("token is not refreshed")
+    }
+    const coronaData = await getCoronaDataService()
+    if (coronaData) {
+      await sendMessageService(accessToken, `
+        ${dateUtils.getTodayDate()}의 코로나 확진자 수
+
+        * * * * * * * * * *
+        - 어제의 확진자수: ${coronaData.totalCase}
+        - 전체 확진자수: ${coronaData.totalCaseBefore}
+        - 현재 확진자수: ${coronaData.nowCase}
+        (기준 업데이트 시간: ${coronaData.updateTime})
+      `)
+    }
+  } catch (err) {
+    throw err
+  }
+})
 app.post("/message", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     console.log(`do cron job`)
@@ -50,7 +50,7 @@ app.post("/message", async (req: express.Request, res: express.Response, next: e
     if (coronaData) {
       await sendMessageService(accessToken, `
         ${dateUtils.getTodayDate()}의 코로나 확진자 수
-        
+
         * * * * * * * * * * 
         - 어제의 확진자수: ${coronaData.totalCase}
         - 전체 확진자수: ${coronaData.totalCaseBefore}
