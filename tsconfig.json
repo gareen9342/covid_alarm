@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "strict": true,
+    "noImplicitAny": false,
     "baseUrl": "./",
     "outDir": "build",
     "removeComments": true,
@@ -10,9 +11,12 @@
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "esModuleInterop": true,
     "types": [
       "node"
-    ]
+    ],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
     //    "typeRoots": [
     //      "./types/*.d.ts",
     //      "./node_modules/@types"

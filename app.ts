@@ -1,4 +1,4 @@
-import * as express from "express"
+import express from "express"
 import 'dotenv/config'
 
 const cron = require("node-cron")
@@ -8,17 +8,18 @@ import driver from "./config/driver";
 import getTokenService from "./services/getTokenService"
 import sendMessageService from "./services/sendMessageService"
 import getCoronaDataService from "./services/getCoronaDataService"
-import initData from "./config/config";
+// import initData from "./config/config";
 
 const app: express.Application = express();
 // sequelize setting
 (async () => {
   await driver()
-  await initData()
+  // await initData()
 })()
 
 // health check
 app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
       res.send("hello typescript express!");
     }
 );
@@ -37,8 +38,8 @@ cron.schedule("0 8 * * *", async () => {
         ${dateUtils.getTodayDate()}의 코로나 확진자 수
 
         * * * * * * * * * *
-        - 어제의 확진자수: ${coronaData.totalCase}
-        - 전체 확진자수: ${coronaData.totalCaseBefore}
+        - 어제의 확진자수: ${coronaData.totalCaseBefore}
+        - 전체 확진자수: ${coronaData.totalCase}
         - 현재 확진자수: ${coronaData.nowCase}
         (기준 업데이트 시간: ${coronaData.updateTime})
       `)

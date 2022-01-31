@@ -4,6 +4,7 @@ import {Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-
   timestamps: true
 })
 export class Config extends Model {
+
   @PrimaryKey @Column
   key!: string;
 
