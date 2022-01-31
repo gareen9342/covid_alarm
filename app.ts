@@ -1,24 +1,23 @@
 import * as express from "express"
 import 'dotenv/config'
-import {json} from 'body-parser'
 
 const cron = require("node-cron")
-import {sequelize} from "./config/sequelize"
 
 import dateUtils from "./util/dateUtils"
+import driver from "./config/driver";
 import getTokenService from "./services/getTokenService"
 import sendMessageService from "./services/sendMessageService"
 import getCoronaDataService from "./services/getCoronaDataService"
+import initData from "./config/config";
 
-const app: express.Application = express()
-
-app.use(json);
-
+const app: express.Application = express();
+// sequelize setting
 (async () => {
-  await sequelize.sync({force: true})
+  await driver()
+  await initData()
 })()
 
-
+// health check
 app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       res.send("hello typescript express!");
     }
@@ -49,7 +48,7 @@ cron.schedule("0 8 * * *", async () => {
   }
 })
 
-
+// test용
 app.post("/message", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     console.log(`do cron job`)

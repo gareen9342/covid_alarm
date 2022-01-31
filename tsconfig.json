@@ -12,15 +12,16 @@
     "importHelpers": true,
     "types": [
       "node"
-    ],
-    "typeRoots": [
-      "../node_modules/@types"
     ]
+    //    "typeRoots": [
+    //      "./types/*.d.ts",
+    //      "./node_modules/@types"
+    //    ]
   },
   "include": [
-    "./src/*.ts"
+    "./**/*.d.ts"
   ],
   "exclude": [
-    "../node_modules/**/*"
+    "./node_modules/**/*"
   ]
 }
