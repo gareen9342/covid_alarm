@@ -1,6 +1,7 @@
 import axios from "axios";
 import {Config} from "../models/Config"
 import logger from "../logger/winston"
+import {Injectable} from "@decorators/di";
 
 const qs = require("qs")
 
@@ -10,15 +11,18 @@ const qs = require("qs")
  * refreshToken값이 있을 경우, 데이터 베이스를 업데이트 한다.
  * @returns {Promise<string : token>}
  */
+@Injectable()
 export default class GetTokenService {
   async getToken() {
+
     let token = ""
+
     try {
+
       logger.info(`refreshing accessToken from KaKao ...`)
 
       // @ts-ignore
       const {value: refreshToken} = await Config.findOne({where: {key: "refreshToken"}, raw: true})
-
       logger.info(`refresh Token found : ${refreshToken}`)
 
       const apiRes = await axios.post(`https://kauth.kakao.com/oauth/token`, qs.stringify({

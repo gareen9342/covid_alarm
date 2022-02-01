@@ -14,10 +14,10 @@ export default class SendMessageService {
         object_type: "text",
         text: message,
         link: {
-          "web_url": "https://developers.kakao.com",
-          "mobile_web_url": "https://developers.kakao.com"
+          "web_url": "http://ncov.mohw.go.kr/bdBoardList_Real.do",
+          "mobile_web_url": "http://ncov.mohw.go.kr/bdBoardList_Real.do"
         },
-        button_title: "바로 확인"
+        button_title: "코로나 확진자수 확인하기"
       })
 
       logger.debug(`[SEND KAKAO MESSAGE] URL : https://kapi.kakao.com/v2/api/talk/memo/default/send`)
