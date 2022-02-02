@@ -4,7 +4,8 @@
     "strict": true,
     "noImplicitAny": false,
     "baseUrl": "./",
-    "outDir": "build",
+    "outDir": "dist",
+    "rootDir": ".",
     "removeComments": true,
     "experimentalDecorators": true,
     "target": "es6",
@@ -23,7 +24,8 @@
     //    ]
   },
   "include": [
-    "./**/*.d.ts"
+    "*.ts",
+    "./**/*.ts"
   ],
   "exclude": [
     "./node_modules/**/*"

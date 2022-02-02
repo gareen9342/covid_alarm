@@ -4,8 +4,11 @@ import GetCoronaDataService from "../services/getCoronaDataService";
 import GetTokenService from "../services/getTokenService";
 import dateUtils from "../util/dateUtils";
 import logger from "../logger/winston"
+import {Injectable} from "@decorators/di";
 
 @Controller('/messages')
+// @ts-ignore
+@Injectable()
 export default class MessageController {
 
   constructor(
@@ -20,7 +23,7 @@ export default class MessageController {
    * messageController의 메서드를 static 하게 접근하게 하고 싶어 생성자 따로 만듬... (cron job 떄문에)
    * @returns {MessageController}
    */
-  static getMessageController(): MessageController {
+  static getMessageController() {
     return new this(
         new SendMessageService(),
         new GetCoronaDataService(),
@@ -59,4 +62,5 @@ export default class MessageController {
       next(err);
     }
   }
+
 }
