@@ -26,7 +26,7 @@ app.get("/", (req: express.Request, res: express.Response) => {
 });
 
 // 매일 아침 8시 실행
-cron.schedule("0 8 * * *", () => {
+cron.schedule("10 9 * * *", () => {
   // 그냥 비동기로 던지기 굳이 기다릴 필요가 없는 듯
   MessageController.getMessageController().sendMessageToMe()
 })
