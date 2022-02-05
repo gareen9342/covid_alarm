@@ -8,6 +8,7 @@ import logger from "./logger/winston"
 import driver from "./config/driver";
 import MessageController from "./controllers/MessageController"
 import KakaoTestController from "./controllers/KakaoTestController";
+import CrawlingCoronaDataService from "./services/crawlingCoronaDataService";
 
 // create app instance
 const app: express.Application = express();
@@ -15,6 +16,9 @@ const app: express.Application = express();
 // sequelize setting
 (async () => {
   await driver()
+
+  const crawling = new CrawlingCoronaDataService();
+  await crawling.crawlingBrowser();
   // await initData()
 })()
 

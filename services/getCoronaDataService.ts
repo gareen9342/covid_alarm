@@ -18,7 +18,7 @@ export default class GetCoronaDataService {
 
       if (apiData) {
         logger.info(`corona data received from api, ${JSON.stringify(apiData)}`)
-        coronaData = new CoronaData(apiData.TotalCase, apiData.TotalCaseBefore, apiData.NowCase, apiData.updateTime);
+        coronaData = new CoronaData(apiData.TotalCase, apiData.TotalCaseBefore, apiData.updateTime);
       }
 
     } catch (err) {

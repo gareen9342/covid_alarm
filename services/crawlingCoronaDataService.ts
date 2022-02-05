@@ -1,9 +1,11 @@
 import {Injectable} from "@decorators/di";
-import puppeteer, {Browser} from "puppeteer";
+import puppeteer, {Browser, Page} from "puppeteer";
+import {CoronaData} from "../dto/CoronaData";
 
 class Puppeteer {
 
   private _browser: Browser | undefined;
+  private _page: Page | undefined;
 
   constructor() {
   }
@@ -16,20 +18,43 @@ class Puppeteer {
     return this._browser;
   }
 
-  async launchBrowser() {
-    this._browser = await puppeteer.launch({
-      headless: true // 브라우저 없이 크롬을 실행함
-    });
-    return this // 한번에 체이닝 하려고 이렇게 함. 생성자안에 넣으려고 했는데 프로미스 생성자를 쓸 수 없어서...
+  set page(value: Page | undefined) {
+    this._page = value;
   }
 
-  async goToPage(pageURL: string) {
-    const page = await this.browser?.newPage();
-    page?.goto(pageURL);
+  get page(): Page | undefined {
+    return this._page;
+  }
+
+  async launchBrowserAndNewPage() {
+
+    const browser = await puppeteer.launch({
+      headless: true // 브라우저 없이 크롬을 실행함
+    });
+
+    if (browser) {
+      this.browser = browser;
+      this.page = await this.browser?.newPage();
+    }
+    return this // 한번에 체이닝 하려고 이렇게 함. 생성자안에 넣으려고 했는데 프로미스 생성자를 쓸 수 없어서...
+    
+  }
+
+  async goToPage(pageURL: string, waitselector: string) {
+    await this.page?.goto(pageURL);
+    await this.page?.waitForSelector(waitselector);
+  }
+
+  async getTextContent(DOMName: string) {
+    let textContent = ""
+    await this.page?.$eval(DOMName, name => {
+      textContent = name.textContent || ""
+    })
+    return textContent
   }
 
   async closeBrowser() {
-    this._browser?.close();
+    this.browser?.close();
   }
 }
 
@@ -39,10 +64,19 @@ export default class CrawlingCoronaDataService {
 
   async crawlingBrowser() {
     try {
-      const puppeteer = await new Puppeteer().launchBrowser()
-      await puppeteer.goToPage("asdf");
+      const puppeteer = await new Puppeteer().launchBrowserAndNewPage()
+      await puppeteer.goToPage("http://ncov.mohw.go.kr/", ".occur_graph");
 
+
+      // const totalPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_num>div:nth-child(2)")
+      const yesterdayPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_graph tbody tr:first-child td:nth-of-type(4)>span")
+      const liveDate = await puppeteer.getTextContent(".liveToggleOuter .occurrenceStatus .title1 .livedate")
+
+      console.log(yesterdayPatient, liveDate)
+      const coronaData = new CoronaData("totalPatient", yesterdayPatient, liveDate)
+      console.log(coronaData)
       await puppeteer.closeBrowser();
+
     } catch (err) {
       throw err;
     }
