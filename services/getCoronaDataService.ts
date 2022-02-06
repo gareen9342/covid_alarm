@@ -2,6 +2,7 @@ import axios from "axios";
 import {CoronaData} from "../dto/CoronaData";
 import logger from "../logger/winston";
 import {Injectable} from "@decorators/di";
+import CrawlingCoronaDataService from "./crawlingCoronaDataService";
 
 /**
  * 코로나 확진자수 데이터 가져오기
@@ -9,6 +10,10 @@ import {Injectable} from "@decorators/di";
  */
 @Injectable()
 export default class GetCoronaDataService {
+  /**
+   * 코로나 API를 이용해서 데이터 가져오기
+   * @returns {Promise<null | CoronaData>}
+   */
   async getData() {
     let coronaData: CoronaData | null = null
     try {
@@ -26,5 +31,23 @@ export default class GetCoronaDataService {
     } finally {
       return coronaData
     }
+
   }
+
+  /**
+   * 크롤링을 이용해서 데이터 가져오기
+   * @returns {Promise<null | CoronaData>}
+   */
+  async getDataFromCrawler() {
+    let coronaData: CoronaData | null = null
+    try {
+      const crawlingCoronaDataService = new CrawlingCoronaDataService();
+      coronaData = await crawlingCoronaDataService.crawlingBrowserAndReturnCoronaData();
+    } catch (err) {
+      throw err
+    } finally {
+      return coronaData
+    }
+  }
+
 }

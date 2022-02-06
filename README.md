@@ -9,10 +9,11 @@
 - [x] : 코로나 공공 API 인증
 - [x] : cron job을 이용해 매일 주기적으로 돌게 만들기
 - [x] : 로그추가
-- [ ] : 친구에게 전송
 - [x] : 서버가 재시작 될수도 있기 때문에, refreshToken을 디비에 저장해야함
-- [ ] : typescript
 - [x] : Oracle Cloud 배포
+- [x] : 정확한 데이터를 가지고 오기 위해 Puppeteer 크롤링한 데이터로 변경
+- [ ] : 친구에게 전송
+- [ ] : typescript
 
 ## to run this project..
 

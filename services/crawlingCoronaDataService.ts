@@ -1,4 +1,5 @@
 import {Injectable} from "@decorators/di";
+import logger from "../logger/winston"
 import puppeteer, {Browser, Page} from "puppeteer";
 import {CoronaData} from "../dto/CoronaData";
 
@@ -70,41 +71,31 @@ class Puppeteer {
 @Injectable()
 export default class CrawlingCoronaDataService {
 
-
-  async crawlingBrowser() {
+  /**
+   * Puppeteer 를 이용한 크롤링.
+   * Puppeteer 클래스는 위에 따로 구현했음. 해당 디펜던시의 기능을 좀 더 간편하게 쓸 수 있도록 재구성했다.
+   * @returns {Promise<CoronaData>}
+   */
+  async crawlingBrowserAndReturnCoronaData() {
     try {
+      logger.info(`start get corona data with crawling web site :: http://ncov.mohw.go.kr/`)
+
       const puppeteer = await new Puppeteer().launchBrowserAndNewPage()
       await puppeteer.goToPage("http://ncov.mohw.go.kr/", ".occur_graph");
 
-
       const totalPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_num>div:nth-child(2)") || ""
-      const yesterdayPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_graph tbody tr:first-child td:nth-of-type(4)>span") || ""
       const liveDate = await puppeteer.getTextContent(".liveToggleOuter .occurrenceStatus .title1 .livedate") || ""
+      const yesterdayPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_graph tbody tr:first-child td:nth-of-type(4)>span") || ""
 
       const coronaData = new CoronaData(totalPatient, yesterdayPatient, liveDate)
-      console.log(coronaData)
+
+      logger.info(`result data from API = totalPatien ${JSON.stringify(coronaData)}`)
+
       await puppeteer.closeBrowser();
 
+      return coronaData;
     } catch (err) {
       throw err;
     }
-
   }
-
-  // async crawlingBrowser() {
-  //   try {
-  //     const browser = await puppeteer.launch({
-  //       // headless: false
-  //     })
-  //     const page = await browser.newPage()
-  //     await page.goto("http://ncov.mohw.go.kr/")
-  //
-  //     const elen = await page.$("td")
-  //     const value = await page.evaluate(el => el.textContent, elen)
-  //     console.log(value)
-  //
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
 }

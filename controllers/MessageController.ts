@@ -42,9 +42,9 @@ export default class MessageController {
       if (!accessToken?.length) {
         throw new Error("token is not refreshed")
       }
-      const coronaData = await this.getCoronaDataService.getData()
+      const coronaData = await this.getCoronaDataService.getDataFromCrawler()
       if (coronaData) {
-        await this.sendMessageService.send(accessToken, ` ${dateUtils.getTodayDate()}의 코로나 확진자 수\n* * * * * * * * * *\n - 어제의 확진자수: ${coronaData.totalCaseBefore}\n - 전체 확진자수: ${coronaData.totalCase} \n- 현재 확진자수: ${coronaData.nowCase} \n(기준 업데이트 시간: ${coronaData.updateTime}) `)
+        await this.sendMessageService.send(accessToken, ` ${dateUtils.getTodayDate()}의 코로나 확진자 수\n\n - 어제의 확진자수: ${coronaData.totalCaseBefore}\n - 전체 확진자수: ${coronaData.totalCase} \n\n(기준 업데이트 시간: ${coronaData.updateTime}) `)
       }
 
     } catch (err) {
