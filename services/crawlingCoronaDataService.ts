@@ -34,22 +34,31 @@ class Puppeteer {
 
     if (browser) {
       this.browser = browser;
-      this.page = await this.browser?.newPage();
     }
     return this // 한번에 체이닝 하려고 이렇게 함. 생성자안에 넣으려고 했는데 프로미스 생성자를 쓸 수 없어서...
-    
+
   }
 
   async goToPage(pageURL: string, waitselector: string) {
+    if (!this.browser) {
+      throw new Error("browser is not defined")
+    }
+    this.page = await this.browser.newPage();
     await this.page?.goto(pageURL);
     await this.page?.waitForSelector(waitselector);
   }
 
-  async getTextContent(DOMName: string) {
-    let textContent = ""
-    await this.page?.$eval(DOMName, name => {
-      textContent = name.textContent || ""
-    })
+  async getTextContent(DOMName: string): Promise<string | undefined> {
+
+    let textContent
+
+    if (this.page) {
+      const domHandle = await this.page.$(DOMName)
+      textContent = await this.page.evaluate(el => el.textContent, domHandle)
+    } else {
+      throw new Error("page is not ready")
+    }
+
     return textContent
   }
 
@@ -68,12 +77,11 @@ export default class CrawlingCoronaDataService {
       await puppeteer.goToPage("http://ncov.mohw.go.kr/", ".occur_graph");
 
 
-      // const totalPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_num>div:nth-child(2)")
-      const yesterdayPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_graph tbody tr:first-child td:nth-of-type(4)>span")
-      const liveDate = await puppeteer.getTextContent(".liveToggleOuter .occurrenceStatus .title1 .livedate")
+      const totalPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_num>div:nth-child(2)") || ""
+      const yesterdayPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_graph tbody tr:first-child td:nth-of-type(4)>span") || ""
+      const liveDate = await puppeteer.getTextContent(".liveToggleOuter .occurrenceStatus .title1 .livedate") || ""
 
-      console.log(yesterdayPatient, liveDate)
-      const coronaData = new CoronaData("totalPatient", yesterdayPatient, liveDate)
+      const coronaData = new CoronaData(totalPatient, yesterdayPatient, liveDate)
       console.log(coronaData)
       await puppeteer.closeBrowser();
 
@@ -83,4 +91,20 @@ export default class CrawlingCoronaDataService {
 
   }
 
+  // async crawlingBrowser() {
+  //   try {
+  //     const browser = await puppeteer.launch({
+  //       // headless: false
+  //     })
+  //     const page = await browser.newPage()
+  //     await page.goto("http://ncov.mohw.go.kr/")
+  //
+  //     const elen = await page.$("td")
+  //     const value = await page.evaluate(el => el.textContent, elen)
+  //     console.log(value)
+  //
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 }
