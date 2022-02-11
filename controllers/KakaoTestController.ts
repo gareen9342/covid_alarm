@@ -3,8 +3,10 @@ import GetTokenService from "../services/getTokenService"
 import GetFriendsService from "../services/getFriendsService"
 import express from "express"
 import logger from "../logger/winston"
+import {Injectable} from "@decorators/di";
 
 @Controller("/kakao")
+@Injectable()
 export default class KakaoTestController {
   constructor(
       private readonly getTokenService: GetTokenService,

@@ -17,11 +17,10 @@
       "node"
     ],
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-    //    "typeRoots": [
-    //      "./types/*.d.ts",
-    //      "./node_modules/@types"
-    //    ]
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": [
+      "./types"
+    ]
   },
   "include": [
     "*.ts",

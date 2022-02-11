@@ -11,6 +11,8 @@ export default class GetFriendsService {
    */
   async getFriends(token) {
     try {
+
+      // globalThis.myConsole("hello")
       logger.info(`searching my friends list from Kakao...`)
       const apiRes = await axios.get("https://kapi.kakao.com/v1/api/talk/friends", {
         headers: {
@@ -19,7 +21,7 @@ export default class GetFriendsService {
         }
       })
 
-      logger.info(`my friends list received. api response = ${JSON.stringify(apiRes)}`)
+      logger.info(`my friends list received. api response = ${JSON.stringify(apiRes.data)}`)
 
       return apiRes.data
     } catch (err: any) {

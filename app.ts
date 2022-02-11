@@ -1,5 +1,6 @@
 import express from "express"
 import {attachControllers} from "@decorators/express";
+import logger from "./logger/winston";
 
 const cron = require("node-cron");
 import 'dotenv/config'
@@ -12,8 +13,14 @@ import KakaoTestController from "./controllers/KakaoTestController";
 // create app instance
 const app: express.Application = express();
 
+globalThis.myConsole = (message) => {
+  logger.info(message)
+}
 // sequelize setting
 (async () => {
+
+  globalThis.myConsole("hello")
+
   await driver()
 })()
 
