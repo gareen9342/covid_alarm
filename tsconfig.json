@@ -14,13 +14,16 @@
     "importHelpers": true,
     "esModuleInterop": true,
     "types": [
-      "node"
+      "node",
+      "mocha"
     ],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "typeRoots": [
-      "./types"
-    ]
+      "node_modules/",
+      "./types/*.d.ts"
+    ],
+    "strictPropertyInitialization": false
   },
   "include": [
     "*.ts",

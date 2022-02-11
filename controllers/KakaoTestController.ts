@@ -31,7 +31,7 @@ export default class KakaoTestController {
         logger.debug(`got my friends list from Kakao API, api response = ${JSON.stringify(val)}`)
       })
 
-      res.json(apiResponse)
+      res.json({...apiResponse, resultCode: 0})
 
     } catch (err) {
       next(err)

@@ -5,6 +5,7 @@ import GetTokenService from "../services/getTokenService";
 import dateUtils from "../util/dateUtils";
 import logger from "../logger/winston"
 import {Injectable} from "@decorators/di";
+import ClientResponse from "../dto/ClientResponse";
 
 @Controller('/messages')
 // @ts-ignore
@@ -35,11 +36,12 @@ export default class MessageController {
    * 나에게 확진자 정보를 전송하기
    * @returns {Promise<void>}
    */
-  async sendMessageToMe() {
+  async sendMessageToMe(): Promise<void> {
     try {
       logger.info("start sending message to me")
       const accessToken = await this.getTokenService.getToken()
       if (!accessToken?.length) {
+        // TODO : 에러를 토큰 서비스 쪽에서 만들어 낼 수 있도록 변경하기
         throw new Error("token is not refreshed")
       }
       const coronaData = await this.getCoronaDataService.getDataFromCrawler()
@@ -57,7 +59,7 @@ export default class MessageController {
   async send(@Response() res, @Next() next) {
     try {
       await this.sendMessageToMe()
-      res.send("send message succeed");
+      res.json(new ClientResponse(0))
     } catch (err) {
       next(err);
     }
