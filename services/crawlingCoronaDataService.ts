@@ -49,9 +49,9 @@ class Puppeteer {
     await this.page?.waitForSelector(waitselector);
   }
 
-  async getTextContent(DOMName: string): Promise<string | undefined> {
+  async getTextContent(DOMName: string): Promise<string> {
 
-    let textContent
+    let textContent = ""
 
     if (this.page) {
       const domHandle = await this.page.$(DOMName)
@@ -83,9 +83,9 @@ export default class CrawlingCoronaDataService {
       const puppeteer = await new Puppeteer().launchBrowserAndNewPage()
       await puppeteer.goToPage("http://ncov.mohw.go.kr/", ".occur_graph");
 
-      const totalPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_num>div:nth-child(2)") || ""
-      const liveDate = await puppeteer.getTextContent(".liveToggleOuter .occurrenceStatus .title1 .livedate") || ""
-      const yesterdayPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_graph tbody tr:first-child td:nth-of-type(4)>span") || ""
+      const totalPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_num>div:nth-child(2)")
+      const liveDate = await puppeteer.getTextContent(".liveToggleOuter .occurrenceStatus .title1 .livedate")
+      const yesterdayPatient = await puppeteer.getTextContent(".liveToggleOuter .occur_graph tbody tr:first-child td:nth-of-type(4)>span")
 
       const coronaData = new CoronaData(totalPatient, yesterdayPatient, liveDate)
 

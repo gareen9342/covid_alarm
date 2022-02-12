@@ -18,9 +18,6 @@ globalThis.myConsole = (message) => {
 }
 // sequelize setting
 (async () => {
-
-  globalThis.myConsole("hello")
-
   await driver()
 })()
 
@@ -34,7 +31,7 @@ app.get("/", (req: express.Request, res: express.Response) => {
 // 매일 아침 8시 실행
 cron.schedule("10 9 * * *", () => {
   // 그냥 비동기로 던지기 굳이 기다릴 필요가 없는 듯
-  MessageController.getMessageController().sendMessageToMe()
+  MessageController.getMessageController().sendToMeFriends()
 })
 
 // TODO : 과연 이 에러 핸들러는 쓰일 것인가... 404 에러 처리를 하려한다.

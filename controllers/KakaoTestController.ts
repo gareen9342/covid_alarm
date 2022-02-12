@@ -18,20 +18,19 @@ export default class KakaoTestController {
   async getFriends(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
 
+      let friendsList: Array<string> = []
       logger.info(`get friends from Kakao`)
-      let apiResponse = {}
 
       const accessToken = await this.getTokenService.getToken()
       if (!accessToken?.length) {
         throw new Error("token is not refreshed")
       }
 
-      await this.getFriendsService.getFriends(accessToken).then(val => {
-        apiResponse = val
-        logger.debug(`got my friends list from Kakao API, api response = ${JSON.stringify(val)}`)
-      })
+      friendsList = await this.getFriendsService.getFriends(accessToken)
 
-      res.json({...apiResponse, resultCode: 0})
+      logger.debug(`got my friends list from Kakao API, api response = ${JSON.stringify(friendsList)}`)
+
+      res.json({friendsList, resultCode: 0})
 
     } catch (err) {
       next(err)

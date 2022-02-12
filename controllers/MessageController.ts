@@ -6,6 +6,7 @@ import dateUtils from "../util/dateUtils";
 import logger from "../logger/winston"
 import {Injectable} from "@decorators/di";
 import ClientResponse from "../dto/ClientResponse";
+import GetFriendsService from "../services/getFriendsService";
 
 @Controller('/messages')
 // @ts-ignore
@@ -15,7 +16,8 @@ export default class MessageController {
   constructor(
       private readonly sendMessageService: SendMessageService,
       private readonly getCoronaDataService: GetCoronaDataService,
-      private readonly getTokenService: GetTokenService
+      private readonly getTokenService: GetTokenService,
+      private readonly getFriendsService: GetFriendsService
   ) {
   }
 
@@ -28,7 +30,8 @@ export default class MessageController {
     return new this(
         new SendMessageService(),
         new GetCoronaDataService(),
-        new GetTokenService()
+        new GetTokenService(),
+        new GetFriendsService()
     )
   }
 
@@ -40,10 +43,6 @@ export default class MessageController {
     try {
       logger.info("start sending message to me")
       const accessToken = await this.getTokenService.getToken()
-      if (!accessToken?.length) {
-        // TODO : 에러를 토큰 서비스 쪽에서 만들어 낼 수 있도록 변경하기
-        throw new Error("token is not refreshed")
-      }
       const coronaData = await this.getCoronaDataService.getDataFromCrawler()
       if (coronaData) {
         await this.sendMessageService.send(accessToken, ` ${dateUtils.getTodayDate()}의 코로나 확진자 수\n\n - 어제의 확진자수: ${coronaData.totalCaseBefore}\n - 전체 확진자수: ${coronaData.totalCase} \n\n(기준 업데이트 시간: ${coronaData.updateTime}) `)
@@ -55,6 +54,39 @@ export default class MessageController {
 
   }
 
+  async sendToMeFriends(): Promise<void> {
+    try {
+      logger.info(`start sending message to friends`)
+      const accessToken = await this.getTokenService.getToken()
+
+      const uuidArr = await this.getFriendsService.getFriends(accessToken)
+      const coronaData = await this.getCoronaDataService.getDataFromCrawler()
+      const message =` ${dateUtils.getTodayDate()}의 코로나 확진자 수\n\n - 어제의 확진자수: ${coronaData.totalCaseBefore}\n - 전체 확진자수: ${coronaData.totalCase} \n\n(기준 업데이트 시간: ${coronaData.updateTime}) `
+
+      await this.sendMessageService.send(
+          accessToken,
+          message
+      )
+
+      await this.sendMessageService.sendToFriends(
+        accessToken,
+        message,
+        uuidArr
+      )
+    } catch (err) {
+      throw err
+    }
+  }
+  @Post('/friends')
+  async sendFriends(@Response() res, @Next() next) {
+    try {
+      await this.sendToMeFriends()
+      res.json(new ClientResponse(0))
+    } catch (err) {
+      next(err);
+    }
+  }
+
   @Post('/')
   async send(@Response() res, @Next() next) {
     try {
@@ -64,5 +96,6 @@ export default class MessageController {
       next(err);
     }
   }
+
 
 }

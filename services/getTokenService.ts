@@ -40,6 +40,10 @@ export default class GetTokenService {
 
       token = apiRes?.data?.access_token || ""
 
+      if (!token.length) {
+        throw new Error("token is not refreshed")
+      }
+
       // refresh token 값이 있을 경우 갱신한다.
       if (apiRes?.data?.refresh_token) {
         logger.info(`updating refresh token....`)
@@ -54,10 +58,9 @@ export default class GetTokenService {
         logger.info(`refresh token is updated to database, update result: ${JSON.stringify(updateRes)}`)
       }
 
+      return token
     } catch (err) {
       throw err
-    } finally {
-      return token
     }
   }
 }

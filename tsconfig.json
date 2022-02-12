@@ -23,7 +23,8 @@
       "node_modules/",
       "./types/*.d.ts"
     ],
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "lib": ["DOM.Iterable"]
   },
   "include": [
     "*.ts",
