@@ -7,9 +7,9 @@
     "start": "node dist/www.ts",
     "start:dev": "nodemon --exec ts-node www.ts",
     "build": "tsc -p .",
-    "predeploy": "npm run test && pm2 stop covid_alarm",
-    "deploy": "npm run build && pm2 start dist/ecosystem.config.js --env production && pm2 save",
-    "test": "npx mocha test/*.ts -r ts-node/register"
+    "predeploy": "npm run test",
+    "deploy": "npm install && npm run build && pm2 restart dist/ecosystem.config.js --env production && pm2 save",
+    "test": "npx mocha test/*.ts -r ts-node/register --exit"
   },
   "keywords": [],
   "author": "",
