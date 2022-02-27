@@ -3,7 +3,7 @@ import logger from "../logger/winston";
 
 module.exports = (err: express.Errback, req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (err) {
-    logger.error(err)
+    logger.error(err.name)
   }
   res.status(500).send({error: 'Something failed!'});
 }

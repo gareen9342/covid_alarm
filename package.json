@@ -8,7 +8,7 @@
     "start:dev": "nodemon --exec ts-node www.ts",
     "build": "tsc -p .",
     "predeploy": "npm run test",
-    "deploy": "npm install && npm run build && pm2 restart dist/ecosystem.config.js --env production && pm2 save",
+    "deploy": "pm2 restart dist/ecosystem.config.js --env production && pm2 save",
     "test": "npx mocha test/*.ts --timeout 10000 -r ts-node/register --exit"
   },
   "keywords": [],

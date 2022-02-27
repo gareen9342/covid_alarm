@@ -1,8 +1,11 @@
 import axios from "axios";
 import logger from "../logger/winston"
 import {Injectable} from "@decorators/di";
-
+import {UrlConstants} from "../constants/urlConstants";
 const qs = require("qs")
+
+
+// TODO : 이런 상수들은 전부 글로벌 변수 처리를 해야함 -> 근데 전역적으로 상수 처리를 어케 할지 모르겠음 왜 const 안됨
 
 @Injectable()
 export default class SendMessageService {
@@ -14,16 +17,16 @@ export default class SendMessageService {
         object_type: "text",
         text: message,
         link: {
-          "web_url": "http://ncov.mohw.go.kr",
-          "mobile_web_url": "http://ncov.mohw.go.kr"
+          "web_url": UrlConstants.CORONA_DATA_WEB_SITE,
+          "mobile_web_url": UrlConstants.CORONA_DATA_WEB_SITE
         },
         button_title: "코로나 확진자수 확인하기"
       })
 
-      logger.debug(`[SEND KAKAO MESSAGE] URL : https://kapi.kakao.com/v2/api/talk/memo/default/send`)
+      logger.debug(`[SEND KAKAO MESSAGE] URL : ${UrlConstants.KAKAO_SEND_MESSAGE_URL}`)
       logger.debug(`[SEND KAKAO MESSAGE] MESSAGE OBJECT : ${JSON.stringify(requestObj)}`)
 
-      const apiRes = await axios.post("https://kapi.kakao.com/v2/api/talk/memo/default/send",
+      const apiRes = await axios.post(UrlConstants.KAKAO_SEND_MESSAGE_URL,
           qs.stringify({template_object: requestObj}), {
             headers: {
               "Authorization": `Bearer ${token}`,
@@ -46,8 +49,8 @@ export default class SendMessageService {
         object_type: "text",
         text: message,
         link: {
-          "web_url": "http://ncov.mohw.go.kr",
-          "mobile_web_url": "http://ncov.mohw.go.kr"
+          "web_url": UrlConstants.CORONA_DATA_WEB_SITE,
+          "mobile_web_url": UrlConstants.CORONA_DATA_WEB_SITE
         },
         button_title: "코로나 확진자수 확인하기"
       })

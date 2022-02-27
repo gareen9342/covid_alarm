@@ -13,9 +13,6 @@ import KakaoTestController from "./controllers/KakaoTestController";
 // create app instance
 const app: express.Application = express();
 
-globalThis.myConsole = (message) => {
-  logger.info(message)
-}
 // sequelize setting
 (async () => {
   await driver()
